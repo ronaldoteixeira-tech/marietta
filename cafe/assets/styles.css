@@ -7,9 +7,7 @@
    website/assets/ef5ca77b338101a3_styles-BnBg8vrK.css — copiados
    literalmente, não reinterpretados. Ver website/design-system.html.
 
-   EXCEÇÃO: as famílias tipográficas NÃO vêm do site. O site usa
-   Fraunces + Inter; aqui valem Graphik (títulos) e Hanken Grotesk
-   (subtítulos e textos), conforme o manual da marca. Ver seção 01.
+   Inclui a tipografia: Fraunces nos títulos, Inter nos textos.
 
    Sumário
      01. Fontes
@@ -29,68 +27,26 @@
 
 
 /* 01. FONTES ======================================================== */
-/* Manual da marca: GRAPHIK nos títulos, HANKEN GROTESK em subtítulos e
-   textos. Substitui a dupla Fraunces/Inter que vinha do site. */
+/* Fraunces (títulos) + Inter (textos) — a dupla do site da Marietta.
+   Ver website-marietta/design-system.html. */
 
-/* ------------------------------------------------------------------
-   GRAPHIK — PENDENTE DE LICENÇA WEB
-
-   Os .ttf em assets/gaphik/ NÃO servem para esta página. O campo de
-   licença embutido neles diz, literalmente:
-
-       "Not to be used for anything other than desktop use!"
-
-   e o iFonts-License.txt que veio junto diz "Demo for Personal Use".
-   São arquivos de uso desktop; publicá-los como webfont distribui o
-   binário para cada visitante — exatamente o que a licença veda.
-   A Graphik é marca registrada da Commercial Type.
-
-   PARA VER O BOLD AGORA, SEM PUBLICAR NADA
-   Instale os .ttf no seu sistema (uso desktop, permitido). Como
-   'Graphik' é a primeira família da pilha e não há @font-face, o
-   navegador usa a fonte instalada na máquina. A página renderiza em
-   Graphik Bold de verdade para aprovação, sem servir nenhum arquivo.
-
-   PARA PUBLICAR
-   Contratar a licença webfont da Graphik na Commercial Type
-   (commercialtype.com). Chegando os .woff2, dois passos:
-     1. copie para esta pasta com estes nomes:
-          graphik-regular.woff2   (400 — usado em .stat__value,
-                                   .coupon__code e .footer__brand)
-          graphik-bold.woff2      (700 — usado em h1–h4)
-     2. descomente o bloco abaixo.
-
-   Até lá os títulos caem na Hanken Grotesk, que já é a fonte de texto
-   da marca — a página segue coerente, só com menos contraste entre
-   título e subtítulo do que o manual pede.
-   ------------------------------------------------------------------ */
-
-/*
 @font-face {
-	font-family: 'Graphik';
+	font-family: 'Fraunces';
 	font-style: normal;
-	font-weight: 400;
+	font-weight: 400 600;
 	font-display: swap;
-	src: url('graphik-regular.woff2') format('woff2');
+	src: url('fraunces-latin.woff2') format('woff2');
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+		U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC,
+		U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
 @font-face {
-	font-family: 'Graphik';
+	font-family: 'Inter';
 	font-style: normal;
-	font-weight: 700;
+	font-weight: 400 700;
 	font-display: swap;
-	src: url('graphik-bold.woff2') format('woff2');
-}
-*/
-
-/* HANKEN GROTESK — variável 100–900, subconjunto latino (cobre todos
-   os acentos do português). Licença SIL OFL, pode ser empacotada. */
-@font-face {
-	font-family: 'Hanken Grotesk';
-	font-style: normal;
-	font-weight: 100 900;
-	font-display: swap;
-	src: url('hanken-grotesk-latin.woff2') format('woff2');
+	src: url('inter-latin.woff2') format('woff2');
 	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
 		U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC,
 		U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
@@ -116,12 +72,9 @@
 	--input: #e1ded5;
 	--ring: #225a31;
 
-	/* tipografia — Graphik nos títulos, Hanken Grotesk no resto.
-	   A Hanken entra como primeiro fallback da Graphik de propósito:
-	   até a licença chegar, a página cai numa grotesca da própria
-	   marca em vez de numa fonte de sistema qualquer. */
-	--font-display: 'Graphik', 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
-	--font-sans: 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
+	/* tipografia */
+	--font-display: 'Fraunces', ui-serif, Georgia, serif;
+	--font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
 
 	--text-xs: .75rem;      --lh-xs: 1rem;
 	--text-sm: .875rem;     --lh-sm: 1.25rem;
@@ -204,6 +157,7 @@ body {
 	font-family: var(--font-sans);
 	font-size: var(--text-base);
 	line-height: var(--lh-base);
+	font-feature-settings: 'ss01', 'cv11';
 	-webkit-font-smoothing: antialiased;
 	text-rendering: optimizeLegibility;
 }
@@ -268,13 +222,11 @@ button, input, textarea, select {
 
 /* 04. TIPOGRAFIA ==================================================== */
 
-/* Títulos: Graphik Bold por padrão, sem precisar de classe. Peso 700,
-   entrelinha 1.1 e tracking -.02em — a entrelinha e o tracking vêm do
-   design system e continuam servindo a uma grotesca em corpo grande,
-   onde o texto pede aperto e não folga. */
+/* Regra de base do design system: h1–h4 são tipos display por si
+   mesmos — peso 500, entrelinha 1.1 e tracking -.02em sem classe. */
 h1, h2, h3, h4 {
 	font-family: var(--font-display);
-	font-weight: 700;
+	font-weight: 500;
 	line-height: 1.1;
 	letter-spacing: -.02em;
 }
@@ -299,12 +251,9 @@ h1, h2, h3, h4 {
 	line-height: var(--lh-xl);
 }
 
-/* Subtítulo. Aplicado em <p> junto de uma classe de tamanho (.h3, .h2):
-   herda a escala de título, mas o manual pede Hanken Grotesk aqui —
-   Graphik é só para título de verdade. O nome .display ficou por
-   compatibilidade com o HTML; leia como "subtítulo em escala grande". */
+/* <p> com fonte display fica em 400, sem tracking — igual ao original */
 .display {
-	font-family: var(--font-sans);
+	font-family: var(--font-display);
 	font-weight: 400;
 }
 

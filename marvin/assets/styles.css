@@ -1,0 +1,951 @@
+/* ===================================================================
+   MARVIN — LANDING PAGE DE PRIMEIRA COMPRA
+   CSS escrito à mão sobre o design system extraído de website-marvin/.
+
+   Cor, raios, easings, keyframes e espaçamento são os MESMOS valores
+   compilados em website-marvin/assets/939fe7c88db15d83_styles-CE4g0xtA.css
+   — copiados literalmente. Ver website-marvin/design-system.html.
+
+   EXCEÇÃO: as famílias tipográficas NÃO vêm do site. O site usa
+   Playfair Display + Inter, que é uma aproximação; valem aqui Graphik
+   (títulos) e Hanken Grotesk (subtítulos e textos), do manual. Seção 01.
+
+   A logo do Marvin É tipografia: "MARVIN" em Graphik SemiBold, caixa
+   alta, tracking .22em, na cor wine. Não existe arquivo de logo — é
+   texto, e está em .wordmark.
+
+   Sumário
+     01. Fontes
+     02. Tokens
+     03. Reset & base
+     04. Tipografia
+     05. Layout
+     06. Cabeçalho
+     07. Botões
+     08. Eyebrow, selos e faixa
+     09. Cards e molduras
+     10. Formulário
+     11. Rodapé
+     12. Movimento
+     13. Responsivo
+   =================================================================== */
+
+
+/* 01. FONTES ======================================================== */
+/* Manual da marca: GRAPHIK nos títulos, HANKEN GROTESK em subtítulos e
+   textos. Substitui a dupla Playfair Display + Inter que o site usa —
+   o site é uma aproximação; a Graphik é a tipografia proprietária,
+   e a logo do Marvin foi desenhada com ela. */
+
+/* ------------------------------------------------------------------
+   GRAPHIK — PENDENTE DE LICENÇA WEB
+
+   Os .ttf em assets/graphik/ NÃO servem para esta página. O campo de
+   licença embutido neles diz, literalmente:
+
+       "Not to be used for anything other than desktop use!"
+
+   e o iFonts-License.txt que veio junto diz "Demo for Personal Use".
+   São arquivos de uso desktop; publicá-los como webfont distribui o
+   binário para cada visitante — exatamente o que a licença veda.
+   A Graphik é marca registrada da Commercial Type.
+
+   PARA VER AGORA, SEM PUBLICAR NADA
+   Instale os .ttf no seu sistema (uso desktop, permitido). Como
+   'Graphik' é a primeira família da pilha e não há @font-face, o
+   navegador usa a fonte instalada na máquina — a página renderiza em
+   Graphik de verdade para aprovação, sem servir nenhum arquivo.
+
+   PARA PUBLICAR
+   Contratar a licença webfont na Commercial Type (commercialtype.com).
+   Chegando os .woff2, dois passos:
+     1. copie para esta pasta com estes nomes:
+          graphik-regular.woff2   (400 — corpo do wordmark, se usado)
+          graphik-medium.woff2    (500 — títulos)
+          graphik-semibold.woff2  (600 — wordmark)
+          graphik-medium-italic.woff2 (500 itálico — a ênfase <em>)
+     2. descomente o bloco abaixo.
+
+   Até lá tudo cai na Hanken Grotesk, que já é a fonte de texto da
+   marca — a página segue coerente, só com menos contraste entre
+   título e texto do que o manual pede.
+   ------------------------------------------------------------------ */
+
+/*
+@font-face {
+	font-family: 'Graphik';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url('graphik-regular.woff2') format('woff2');
+}
+
+@font-face {
+	font-family: 'Graphik';
+	font-style: normal;
+	font-weight: 500;
+	font-display: swap;
+	src: url('graphik-medium.woff2') format('woff2');
+}
+
+@font-face {
+	font-family: 'Graphik';
+	font-style: normal;
+	font-weight: 600;
+	font-display: swap;
+	src: url('graphik-semibold.woff2') format('woff2');
+}
+
+@font-face {
+	font-family: 'Graphik';
+	font-style: italic;
+	font-weight: 500;
+	font-display: swap;
+	src: url('graphik-medium-italic.woff2') format('woff2');
+}
+*/
+
+/* HANKEN GROTESK — variável 100–900, subconjunto latino (cobre todos
+   os acentos do português). Licença SIL OFL, pode ser empacotada. */
+@font-face {
+	font-family: 'Hanken Grotesk';
+	font-style: normal;
+	font-weight: 100 900;
+	font-display: swap;
+	src: url('hanken-grotesk-latin.woff2') format('woff2');
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+		U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC,
+		U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+
+/* 02. TOKENS ======================================================== */
+
+:root {
+	/* Paleta em OKLCH, idêntica ao :root do site. Hex ao lado é a
+	   conversão sRGB, para uso fora do navegador. */
+	--wine:       oklch(46% .09 35);      /* #824434 — primária       */
+	--terracotta: oklch(64% .13 40);      /* #CD6E4C — acento         */
+	/* Mesma matiz (40) e mesma saturação (.13) da terracotta, só mais
+	   escura. A terracotta do site dá 3,3:1 sobre cream — abaixo do
+	   4,5:1 que a WCAG pede para texto pequeno, e o eyebrow tem 10px.
+	   Esta variante passa (5,4:1 no cream, 4,9:1 no sand) sem sair da
+	   cor da marca. A --terracotta original segue para uso decorativo
+	   (os pontos da faixa), onde contraste de texto não se aplica. */
+	--terracotta-text: oklch(52% .13 40);
+	--caramel:    oklch(70% .09 65);      /* #C59361 — acento claro   */
+	--cream:      oklch(97.5% .012 80);   /* #FBF6EE — fundo          */
+	--sand:       oklch(94% .018 75);     /* #F2EADE — superfície     */
+	--ink:        oklch(30% .02 50);      /* #362B25 — texto          */
+	--olive:      oklch(52% .06 115);     /* #686D45 — apoio          */
+	--clay:       oklch(40% .06 40);      /* #633C2E — apoio          */
+	--bottle:     oklch(32% .055 160);    /* #153B29 — seção escura   */
+	--border:     oklch(88% .015 70);     /* #DED6CD — bordas         */
+	--destructive: oklch(55% .22 27);     /* erro                     */
+
+	/* A Hanken entra como primeiro fallback da Graphik de propósito:
+	   até a licença chegar, a página cai numa grotesca da própria
+	   marca em vez de numa fonte de sistema qualquer. */
+	--font-display: 'Graphik', 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
+	--font-sans: 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
+
+	--text-xs: .75rem;      --lh-xs: 1rem;
+	--text-sm: .875rem;     --lh-sm: 1.25rem;
+	--text-base: 1rem;      --lh-base: 1.5rem;
+	--text-lg: 1.125rem;    --lh-lg: 1.75rem;
+	--text-xl: 1.25rem;     --lh-xl: 1.75rem;
+	--text-2xl: 1.5rem;     --lh-2xl: 2rem;
+	--text-3xl: 1.875rem;   --lh-3xl: 2.25rem;
+	--text-4xl: 2.25rem;    --lh-4xl: 2.5rem;
+	--text-5xl: 3rem;       --lh-5xl: 1;
+	--text-6xl: 3.75rem;    --lh-6xl: 1;
+
+	--leading-snug: 1.375;
+	--leading-relaxed: 1.625;
+
+	/* O Marvin fecha bem os cantos: raio base 0.5rem. */
+	--radius: .5rem;
+	--radius-sm: calc(var(--radius) - 4px);   /*  4px — imagem de card */
+	--radius-md: calc(var(--radius) - 2px);   /*  6px */
+	--radius-lg: var(--radius);               /*  8px — painéis */
+	--radius-xl: calc(var(--radius) + 4px);   /* 12px */
+
+	--shadow-sm: 0 1px 3px 0 #0000001a, 0 1px 2px -1px #0000001a;
+	--shadow-lg: 0 10px 15px -3px #0000001a, 0 4px 6px -4px #0000001a;
+	--shadow-xl: 0 20px 25px -5px #0000001a, 0 8px 10px -6px #0000001a;
+	--shadow-2xl: 0 25px 50px -12px #00000040;
+	/* sombras próprias do sistema — wine e terra, nunca preto puro */
+	/* a sombra do CTA acompanha a cor do botao — verde, nunca preta */
+	--shadow-cta: 0 18px 40px -20px color-mix(in srgb, var(--bottle) 60%, transparent);
+	--shadow-frame: 0 30px 80px -40px rgba(45, 30, 20, .45);
+
+	/* Movimento: um easing só, durações longas. */
+	--ease: cubic-bezier(.16, 1, .3, 1);
+	--ease-out: cubic-bezier(0, 0, .2, 1);
+	--dur: .3s;
+
+	--container: 72rem;   /* max-w-6xl */
+	--gutter: 1.5rem;     /* px-6 */
+	--header-h: 4.5rem;
+}
+
+/* Fallback para navegador sem OKLCH (pré-2023). */
+@supports not (color: oklch(0% 0 0)) {
+	:root {
+		--wine: #824434;      --terracotta: #cd6e4c;
+		--terracotta-text: #9d4a2c;
+		--caramel: #c59361;   --cream: #fbf6ee;
+		--sand: #f2eade;      --ink: #362b25;
+		--olive: #686d45;     --clay: #633c2e;
+		--bottle: #153b29;    --border: #ded6cd;
+		--destructive: #d40c1a;
+	}
+}
+
+
+/* 03. RESET & BASE ================================================== */
+
+*, *::before, *::after {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	border: 0 solid;
+}
+
+html {
+	-webkit-text-size-adjust: 100%;
+	scroll-behavior: smooth;
+}
+
+body {
+	background-color: var(--cream);
+	color: var(--ink);
+	font-family: var(--font-sans);
+	font-size: var(--text-base);
+	line-height: var(--lh-base);
+	-webkit-font-smoothing: antialiased;
+	text-rendering: optimizeLegibility;
+}
+
+img, svg, video {
+	display: block;
+	max-width: 100%;
+	height: auto;
+	vertical-align: middle;
+}
+
+a { color: inherit; text-decoration: none; }
+ul, ol { list-style: none; }
+
+button, input, textarea, select {
+	font: inherit;
+	color: inherit;
+	background-color: transparent;
+	border-radius: 0;
+}
+
+:focus-visible {
+	outline: 2px solid var(--terracotta);
+	outline-offset: 2px;
+}
+
+::selection {
+	background-color: color-mix(in srgb, var(--wine) 15%, transparent);
+}
+
+.sr-only {
+	position: absolute;
+	width: 1px; height: 1px;
+	padding: 0; margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+}
+
+.skip-link {
+	position: absolute;
+	left: -9999px;
+	top: 0;
+	z-index: 100;
+	background-color: var(--wine);
+	color: var(--cream);
+	padding: .75rem 1.25rem;
+	border-radius: 0 0 var(--radius-lg) 0;
+	font-size: var(--text-sm);
+}
+.skip-link:focus { left: 0; }
+
+
+/* 04. TIPOGRAFIA ==================================================== */
+
+/* Títulos: Graphik Medium em wine. O tracking negativo volta — uma
+   grotesca em corpo grande pede aperto, ao contrário da serifada que
+   estava aqui antes. */
+h1, h2, h3, h4 {
+	font-family: var(--font-display);
+	font-weight: 500;
+	line-height: 1.1;
+	letter-spacing: -.02em;
+	color: var(--wine);
+}
+
+.h1 { font-size: var(--text-5xl); line-height: 1.04; }
+.h2 { font-size: var(--text-4xl); line-height: 1.1; }
+.h3 { font-size: var(--text-2xl); line-height: var(--lh-2xl); }
+.h4 { font-size: var(--text-xl); line-height: var(--lh-xl); }
+
+/* Destaque em verde. Aplicado no <em> da oferta e em números que
+   precisam saltar. Sobre cream dá 11:1, sobre sand 10:1. */
+.bottle { color: var(--bottle); }
+.dark .bottle { color: var(--caramel); }
+
+/* Ênfase em itálico — a assinatura tipográfica do Marvin.
+   Com a Graphik o gesto fica mais discreto que na serifada, mas é a
+   fonte da marca; a inclinação vem do arquivo, não é falseada. */
+em {
+	font-style: italic;
+	font-weight: 500;
+}
+
+/* Subtítulo dentro do H1, como no hero do site */
+.h1__sub {
+	display: block;
+	margin-top: 1rem;
+	font-family: var(--font-sans);
+	font-size: var(--text-3xl);
+	font-weight: 400;
+	line-height: var(--leading-tight, 1.25);
+	color: color-mix(in srgb, var(--ink) 90%, transparent);
+}
+
+/* Subtítulo. O manual manda Graphik só em título de verdade; subtítulo
+   e texto ficam na Hanken. Mantém o corpo grande e a cor wine. */
+.display {
+	font-family: var(--font-sans);
+	font-weight: 400;
+	letter-spacing: -.01em;
+	color: var(--wine);
+}
+
+.lead {
+	font-size: var(--text-lg);
+	line-height: var(--leading-relaxed);
+	color: color-mix(in srgb, var(--ink) 70%, transparent);
+}
+
+.body {
+	font-size: var(--text-base);
+	line-height: var(--leading-relaxed);
+	color: color-mix(in srgb, var(--ink) 70%, transparent);
+}
+
+/* 70% e o piso de opacidade do texto sobre fundo claro: 65% dava
+   4,3:1 e 55% dava 3,2:1 sobre o sand, ambos abaixo do minimo AA. */
+.body-sm {
+	font-size: var(--text-sm);
+	line-height: var(--leading-relaxed);
+	color: color-mix(in srgb, var(--ink) 70%, transparent);
+}
+
+.note {
+	font-size: var(--text-xs);
+	line-height: var(--lh-xs);
+	/* 55% dava 3,3:1; 70% dá 5,1:1 e alinha com o corpo */
+	color: color-mix(in srgb, var(--ink) 70%, transparent);
+}
+
+/* Legenda / metadado — 11px caixa alta */
+.meta {
+	font-size: .6875rem;
+	line-height: 1.4;
+	text-transform: uppercase;
+	letter-spacing: .22em;
+	color: color-mix(in srgb, var(--ink) 70%, transparent);
+}
+
+.measure { max-width: 34rem; }
+.measure-sm { max-width: 28rem; }
+.text-center { text-align: center; }
+
+
+/* 05. LAYOUT ======================================================== */
+
+.container {
+	width: 100%;
+	max-width: var(--container);
+	margin-inline: auto;
+	padding-inline: var(--gutter);
+}
+
+/* O respiro é a assinatura do layout do Marvin: 112px, 144px no
+   desktop. Bem mais folgado que o padrão. */
+.section { padding-block: 7rem; }
+.section--sm { padding-block: 4rem; }
+.section--hero { padding-top: calc(var(--header-h) + 3rem); padding-bottom: 4rem; }
+.section--cream { background-color: var(--cream); }
+.section--sand { background-color: color-mix(in srgb, var(--sand) 40%, transparent); }
+
+.mt-1 { margin-top: .25rem; }
+.mt-2 { margin-top: .5rem; }
+.mt-3 { margin-top: .75rem; }
+.mt-4 { margin-top: 1rem; }
+.mt-5 { margin-top: 1.25rem; }
+.mt-6 { margin-top: 1.5rem; }
+.mt-8 { margin-top: 2rem; }
+.mt-9 { margin-top: 2.25rem; }
+.mt-10 { margin-top: 2.5rem; }
+.mt-12 { margin-top: 3rem; }
+.mt-14 { margin-top: 3.5rem; }
+
+.grid { display: grid; gap: 3rem; }
+.split { display: grid; gap: 2.5rem; }
+
+.section-head { max-width: 42rem; margin-bottom: 3.5rem; }
+.section-head--center { margin-inline: auto; text-align: center; }
+
+/* Régua horizontal que acompanha o cabeçalho de seção no site */
+.head-row {
+	display: flex;
+	align-items: flex-end;
+	justify-content: space-between;
+	gap: 1.5rem;
+	margin-bottom: 3.5rem;
+}
+.head-row__rule { display: none; }
+
+
+/* 06. CABEÇALHO ===================================================== */
+
+.header {
+	position: fixed;
+	inset-inline: 0;
+	top: 0;
+	z-index: 50;
+	background-color: transparent;
+	transition: all .5s var(--ease-out);
+}
+
+.header.is-scrolled {
+	background-color: color-mix(in srgb, var(--cream) 85%, transparent);
+	backdrop-filter: blur(12px);
+	-webkit-backdrop-filter: blur(12px);
+	border-bottom: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
+}
+
+.header__inner {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	height: var(--header-h);
+}
+
+/* A LOGO. É tipografia, não imagem: Graphik SemiBold, caixa alta,
+   tracking .22em, wine. A marca foi desenhada com a própria fonte,
+   então o wordmark segue --font-display e troca junto com ela. */
+.wordmark {
+	font-family: var(--font-display);
+	font-weight: 600;
+	font-size: var(--text-base);
+	letter-spacing: .22em;
+	text-transform: uppercase;
+	color: var(--wine);
+	line-height: 1;
+}
+.wordmark--lg { font-size: var(--text-xl); }
+
+
+/* 07. BOTÕES ======================================================== */
+
+.btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: .5rem;
+	min-height: 2.75rem;
+	border-radius: 9999px;
+	padding: 1rem 1.75rem;
+	font-size: var(--text-xs);
+	line-height: 1;
+	text-transform: uppercase;
+	letter-spacing: .22em;
+	cursor: pointer;
+	text-align: center;
+	transition: transform var(--dur) var(--ease),
+		background-color var(--dur) var(--ease),
+		color var(--dur) var(--ease),
+		border-color var(--dur) var(--ease);
+}
+
+.btn svg { flex-shrink: 0; }
+
+/* AÇÃO = VERDE. O wine continua sendo a voz da marca (títulos e
+   wordmark); o bottle passa a ser a cor de ação. A divisão deixa o
+   CTA saltar em vez de se confundir com o texto ao redor — e o
+   contraste melhora: creme sobre bottle dá 11,5:1 contra os 6,9:1
+   que dava sobre wine. */
+.btn--primary {
+	background-color: var(--bottle);
+	color: var(--cream);
+	box-shadow: var(--shadow-cta);
+}
+.btn--primary:hover {
+	transform: translateY(-2px);
+	background-color: color-mix(in oklab, var(--bottle) 88%, transparent);
+}
+
+.btn--outline {
+	border: 1px solid color-mix(in srgb, var(--bottle) 35%, transparent);
+	color: var(--bottle);
+}
+.btn--outline:hover {
+	background-color: color-mix(in srgb, var(--bottle) 6%, transparent);
+}
+
+/* Sobre superfície escura: papel com texto na cor de ação */
+.btn--invert {
+	background-color: var(--cream);
+	color: var(--bottle);
+	box-shadow: var(--shadow-2xl);
+}
+.btn--invert:hover { transform: translateY(-2px); }
+
+/* Compacto — header */
+.btn--sm {
+	padding: .625rem 1.25rem;
+	letter-spacing: .18em;
+}
+
+.btn--block { display: flex; width: 100%; }
+
+.btn:disabled,
+.btn[aria-disabled='true'] { opacity: .5; pointer-events: none; }
+
+
+/* 08. EYEBROW, SELOS E FAIXA ======================================== */
+
+.eyebrow {
+	display: block;
+	font-size: .625rem;
+	line-height: 1.4;
+	text-transform: uppercase;
+	letter-spacing: .3em;
+	color: var(--terracotta-text);
+}
+
+/* Selo sobre imagem — cream translúcido com blur */
+.tag {
+	position: absolute;
+	left: 1rem;
+	top: 1rem;
+	border-radius: 9999px;
+	background-color: color-mix(in srgb, var(--cream) 85%, transparent);
+	backdrop-filter: blur(8px);
+	-webkit-backdrop-filter: blur(8px);
+	padding: .25rem .75rem;
+	font-size: .5625rem;
+	line-height: 1.4;
+	text-transform: uppercase;
+	letter-spacing: .24em;
+	color: var(--bottle);
+}
+
+/* Faixa de atributos — ponto terracotta em vez de ícone */
+.attrs {
+	border-block: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
+	background-color: color-mix(in srgb, var(--sand) 40%, transparent);
+}
+.attrs__inner {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1.25rem 2.5rem;
+	padding-block: 1.75rem;
+}
+.attrs li {
+	display: flex;
+	align-items: center;
+	gap: .75rem;
+	font-size: .625rem;
+	line-height: 1;
+	text-transform: uppercase;
+	letter-spacing: .24em;
+	color: color-mix(in srgb, var(--ink) 70%, transparent);
+}
+.attrs li::before {
+	content: '';
+	width: 4px;
+	height: 4px;
+	border-radius: 9999px;
+	background-color: var(--terracotta);
+	flex-shrink: 0;
+}
+
+/* Lista de benefícios com check */
+.checks { display: grid; gap: .875rem; }
+.checks li {
+	display: flex;
+	gap: .75rem;
+	font-size: var(--text-sm);
+	line-height: var(--leading-relaxed);
+	color: color-mix(in srgb, var(--ink) 70%, transparent);
+}
+.checks svg {
+	margin-top: .3rem;
+	flex-shrink: 0;
+	color: var(--bottle);
+}
+
+
+/* 09. CARDS E MOLDURAS ============================================== */
+
+/* Moldura assinatura: cantos opostos em 80px, os outros em 6px.
+   A assimetria dá o movimento diagonal que identifica a marca. */
+.frame {
+	overflow: hidden;
+	border-radius: 80px var(--radius-md) 80px var(--radius-md);
+	outline: 1px solid rgba(0, 0, 0, .05);
+	outline-offset: -1px;
+	box-shadow: var(--shadow-frame);
+}
+.frame img { width: 100%; height: 100%; object-fit: cover; }
+.frame--45 { aspect-ratio: 4 / 5; }
+.frame--43 { aspect-ratio: 4 / 3; }
+
+/* Card de categoria — imagem quase quadrada nos cantos, zoom lento */
+.cat { display: flex; flex-direction: column; gap: 1.25rem; }
+
+.cat__media {
+	position: relative;
+	overflow: hidden;
+	border-radius: var(--radius-sm);
+	background-color: var(--sand);
+	outline: 1px solid rgba(0, 0, 0, .05);
+	outline-offset: -1px;
+	aspect-ratio: 4 / 5;
+}
+.cat__media img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	transition: transform 1.2s var(--ease-out);
+}
+.cat:hover .cat__media img { transform: scale(1.04); }
+
+.cat__title { font-size: var(--text-2xl); line-height: var(--lh-2xl); }
+.cat__text {
+	margin-top: .5rem;
+	max-width: 24rem;
+	font-size: var(--text-sm);
+	line-height: var(--leading-relaxed);
+	color: color-mix(in srgb, var(--ink) 70%, transparent);
+}
+
+/* Painel claro */
+.panel {
+	border-radius: var(--radius-lg);
+	border: 1px solid var(--border);
+	background-color: var(--cream);
+	padding: 2rem;
+}
+
+/* Seção escura em bottle — o bloco de destaque do sistema */
+.dark {
+	position: relative;
+	overflow: hidden;
+	background-color: var(--bottle);
+	color: var(--cream);
+}
+.dark::before {
+	content: '';
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+	opacity: .05;
+	background-image: radial-gradient(circle at 30% 30%,
+		rgba(253, 251, 250, .4), transparent 50%);
+}
+.dark > * { position: relative; }
+/* .display e demais titulos: precisa listar .display porque ele e um
+   <p>, nao um heading — o seletor de elemento nao o alcanca e ele
+   ficaria wine sobre bottle (1,67:1). */
+.dark h1, .dark h2, .dark h3, .dark .display { color: var(--cream); }
+/* terracotta sobre bottle dá 3,5:1 — abaixo do mínimo da WCAG para
+   texto pequeno. Caramel é o acento claro da mesma paleta. */
+.dark .eyebrow { color: var(--caramel); }
+.dark .body, .dark .lead { color: color-mix(in srgb, var(--cream) 78%, transparent); }
+.dark .note { color: color-mix(in srgb, var(--cream) 70%, transparent); }
+/* .meta usa ink — sobre bottle ficaria em 1,07:1, ou seja, invisivel */
+.dark .meta { color: color-mix(in srgb, var(--cream) 70%, transparent); }
+.dark .checks li { color: color-mix(in srgb, var(--cream) 78%, transparent); }
+.dark .checks svg { color: var(--caramel); }
+.dark .rule { background-color: color-mix(in srgb, var(--cream) 30%, transparent); }
+
+/* Barrinha divisória. Em fundo claro vai de bottle — o verde da marca,
+   que o site usa como cor de texto e superfície secundária. Antes era
+   cream em qualquer contexto, o que a deixava invisível fora do
+   painel escuro. A variante clara segue no .dark, mais abaixo. */
+.rule {
+	width: 3rem;
+	height: .375rem;
+	border-radius: 9999px;
+	background-color: var(--bottle);
+}
+.rule--center { margin-inline: auto; }
+
+/* Seção com imagem de fundo e gradiente wine */
+.cover { position: relative; overflow: hidden; }
+.cover__img {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+.cover__veil {
+	position: absolute;
+	inset: 0;
+	background-image: linear-gradient(to top,
+		color-mix(in srgb, var(--wine) 85%, transparent),
+		color-mix(in srgb, var(--wine) 40%, transparent),
+		color-mix(in srgb, var(--wine) 10%, transparent));
+}
+.cover__body {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: flex-end;
+	min-height: 32.5rem;
+	padding-bottom: 4rem;
+	text-align: center;
+	color: var(--cream);
+}
+.cover__body h2 { color: var(--cream); }
+.cover__body .lead { color: color-mix(in srgb, var(--cream) 80%, transparent); }
+
+/* Bloco do cupom */
+.coupon {
+	border: 1px dashed color-mix(in srgb, var(--wine) 40%, transparent);
+	background-color: color-mix(in srgb, var(--wine) 6%, transparent);
+	border-radius: var(--radius-lg);
+	padding: 1.75rem;
+	text-align: center;
+}
+.coupon__label {
+	font-size: .625rem;
+	text-transform: uppercase;
+	letter-spacing: .3em;
+	color: var(--terracotta-text);
+}
+.coupon__code {
+	margin-top: .625rem;
+	font-family: var(--font-display);
+	font-size: var(--text-4xl);
+	line-height: 1;
+	letter-spacing: .04em;
+	color: var(--wine);
+}
+
+
+/* 10. FORMULÁRIO ==================================================== */
+/* O site do Marvin não possui nenhum campo de formulário. Este é o
+   único componente novo, construído sobre os tokens --border e
+   --terracotta (que é o --ring do sistema). */
+
+.form {
+	background-color: var(--cream);
+	border: 1px solid var(--border);
+	border-radius: var(--radius-lg);
+	padding: 1.75rem;
+	box-shadow: var(--shadow-lg);
+}
+
+.form__title { font-size: var(--text-2xl); line-height: var(--lh-2xl); }
+
+.form__fields { margin-top: 1.5rem; display: grid; gap: 1.125rem; }
+
+.field label {
+	display: block;
+	font-size: .625rem;
+	text-transform: uppercase;
+	letter-spacing: .22em;
+	color: color-mix(in srgb, var(--ink) 70%, transparent);
+	margin-bottom: .5rem;
+}
+
+.field input {
+	display: block;
+	width: 100%;
+	border: 1px solid var(--border);
+	border-radius: var(--radius-md);
+	background-color: var(--cream);
+	color: var(--ink);
+	padding: .8125rem 1rem;
+	font-size: var(--text-base);
+	line-height: var(--lh-base);
+	transition: border-color var(--dur) var(--ease),
+		box-shadow var(--dur) var(--ease);
+}
+
+.field input::placeholder {
+	color: color-mix(in srgb, var(--ink) 40%, transparent);
+}
+
+.field input:hover {
+	border-color: color-mix(in srgb, var(--wine) 35%, var(--border));
+}
+
+.field input:focus {
+	outline: none;
+	border-color: var(--terracotta);
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--terracotta) 20%, transparent);
+}
+
+.field__error {
+	display: none;
+	margin-top: .375rem;
+	font-size: var(--text-xs);
+	line-height: var(--lh-xs);
+	color: var(--destructive);
+}
+.field.is-invalid input { border-color: var(--destructive); }
+.field.is-invalid input:focus {
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--destructive) 20%, transparent);
+}
+.field.is-invalid .field__error { display: block; }
+
+.form__submit { margin-top: 1.5rem; }
+.form__legal { margin-top: .875rem; text-align: center; }
+
+
+/* 11. RODAPÉ ======================================================== */
+
+.footer {
+	background-color: var(--cream);
+	padding-block: 3.5rem;
+}
+.footer__inner {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1.5rem;
+	border-top: 1px solid var(--border);
+	padding-top: 2.5rem;
+	text-align: center;
+}
+.footer__legal {
+	font-size: .625rem;
+	text-transform: uppercase;
+	letter-spacing: .24em;
+	/* 45% dava 2,6:1 — sobe para 70%, alinhado com o resto do texto */
+	color: color-mix(in srgb, var(--ink) 70%, transparent);
+}
+.footer__links {
+	display: flex;
+	gap: 1.5rem;
+	font-size: .625rem;
+	text-transform: uppercase;
+	letter-spacing: .22em;
+	/* 55% dava 3,3:1 — sobe para 70% */
+	color: color-mix(in srgb, var(--ink) 70%, transparent);
+}
+.footer__links a:hover { color: var(--wine); }
+
+
+/* 12. MOVIMENTO ===================================================== */
+/* Keyframes copiados do CSS original. Um easing só, durações longas. */
+
+@keyframes reveal-up {
+	0%   { opacity: 0; transform: translateY(24px); }
+	100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slow-zoom {
+	0%   { transform: scale(1.05); }
+	100% { transform: scale(1); }
+}
+
+/* Zoom lento do hero, roda uma vez no load */
+.kinetic-zoom { animation: 1.6s var(--ease) both slow-zoom; }
+
+/* Entrada escalonada — o site aplica com atrasos de
+   0 · 80 · 120 · 160 · 180 · 220 · 320 · 360ms. É a cascata que dá
+   o caráter; sem ela o movimento fica chapado. */
+.up { animation: .9s var(--ease) both reveal-up; }
+.up-1 { animation-delay: 80ms; }
+.up-2 { animation-delay: 160ms; }
+.up-3 { animation-delay: 240ms; }
+.up-4 { animation-delay: 320ms; }
+
+/* Revelação por scroll, mesmo keyframe */
+.reveal { opacity: 0; }
+.reveal.is-visible { animation: .9s var(--ease) both reveal-up; }
+.no-js .reveal { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+	html { scroll-behavior: auto; }
+	*, *::before, *::after {
+		animation-duration: .01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: .01ms !important;
+	}
+	.reveal { opacity: 1; }
+	.cat:hover .cat__media img { transform: none; }
+}
+
+
+/* 13. RESPONSIVO ==================================================== */
+/* Breakpoints do design system: 640 / 768 / 1024. */
+
+@media (min-width: 640px) {
+	.grid--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+	.form { padding: 2rem; }
+	.footer__inner { flex-direction: row; text-align: left; }
+}
+
+@media (min-width: 768px) {
+	:root { --gutter: 2.5rem; --header-h: 5rem; }
+
+	.section { padding-block: 9rem; }
+	.section--sm { padding-block: 6rem; }
+	.section--hero { padding-top: calc(var(--header-h) + 4rem); padding-bottom: 6rem; }
+
+	.h1 { font-size: var(--text-6xl); }
+	.h2 { font-size: var(--text-5xl); }
+	.h3 { font-size: var(--text-3xl); }
+	.h1__sub { font-size: var(--text-4xl); }
+
+	.grid--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+	.grid--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+	.head-row__rule {
+		display: block;
+		flex: 1;
+		height: 1px;
+		background-color: var(--border);
+		margin-bottom: .75rem;
+	}
+	.panel { padding: 3rem; }
+	.coupon { padding: 2rem; }
+	.cover__body { min-height: 40rem; padding-bottom: 6rem; }
+	.wordmark { font-size: var(--text-lg); }
+}
+
+@media (min-width: 1024px) {
+	/* Hero em 12 colunas: texto em 5, imagem em 7 — como no site. */
+	.split--hero {
+		grid-template-columns: repeat(12, minmax(0, 1fr));
+		gap: 3rem;
+		align-items: end;
+	}
+	.split--hero > :first-child { grid-column: span 5 / span 5; padding-bottom: 4rem; }
+	.split--hero > :last-child { grid-column: span 7 / span 7; }
+
+	.split--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4rem; align-items: center; }
+	.split--form { grid-template-columns: 1fr 25rem; gap: 4rem; align-items: start; }
+
+	.h1 { font-size: 4.25rem; }
+	.h1__sub { font-size: 2.75rem; }
+}
