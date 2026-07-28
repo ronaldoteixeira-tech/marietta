@@ -104,6 +104,11 @@
 	--ease-out-expo: cubic-bezier(.22, 1, .36, 1);
 	--dur: .15s;
 
+	/* Verde da Marietta espelhado num token proprio. Dentro de
+	   [data-brand='marvin'] o --primary vira wine, entao o painel
+	   precisa de uma referencia que o escopo nao alcance. */
+	--mt-green: #225a31;
+
 	/* layout */
 	--container: 80rem;
 	--gutter: 1.25rem;
@@ -129,6 +134,7 @@
 		--border: lab(88.4608% -.00050664 4.59685);
 		--input: lab(88.4608% -.00050664 4.59685);
 		--ring: lab(33.8567% -27.1354 17.8475);
+		--mt-green: lab(33.8567% -27.1354 17.8475);
 	}
 }
 
@@ -987,16 +993,30 @@ h1, h2, h3, h4 {
 :root {
 	--mv-wine:       oklch(46% .09 35);      /* #824434 — primária    */
 	--mv-terracotta: oklch(64% .13 40);      /* #CD6E4C — acento      */
+	/* Mesma matiz (40) e saturação (.13), só mais escura. A terracota
+	   do site dá 3,3:1 sobre claro — abaixo do 4,5:1 da WCAG, e o
+	   eyebrow tem 10px. Esta passa em 5,4:1 sem sair da cor da marca;
+	   a --mv-terracotta original segue no uso decorativo. */
+	--mv-terracotta-text: oklch(52% .13 40);
 	--mv-caramel:    oklch(70% .09 65);      /* #C59361 — apoio       */
 	--mv-cream:      oklch(97.5% .012 80);   /* #FBF6EE — fundo       */
 	--mv-sand:       oklch(94% .018 75);     /* #F2EADE — superfície  */
 	--mv-ink:        oklch(30% .02 50);      /* #362B25 — texto       */
 	--mv-olive:      oklch(52% .06 115);     /* #686D45 — apoio       */
 	--mv-clay:       oklch(40% .06 40);      /* #633C2E — apoio       */
-	--mv-bottle:     oklch(32% .055 160);    /* #153B29 — destaque    */
+	/* Verde da marca, do manual. O site usa um bottle mais escuro
+	   (#153B29); vale o oliva do briefing. Renomeado: guardar um oliva
+	   num token chamado "bottle" seria mentira. */
+	--mv-green:      oklch(43.8% .061 115);  /* #51562D — verde Marvin */
 	--mv-border:     oklch(88% .015 70);     /* #DED6CD — bordas      */
 
-	--font-mv-display: 'Playfair Display', ui-serif, Georgia, serif;
+	/* Manual da marca: GRAPHIK nos títulos, HANKEN GROTESK em textos.
+	   O site do Marvin usa Playfair + Inter, mas é aproximação — a
+	   Graphik é a tipografia proprietária, e a logo foi desenhada com
+	   ela. A Hanken entra como primeiro fallback de propósito: até a
+	   licença chegar, cai numa grotesca da própria marca. */
+	--font-mv-display: 'Graphik', 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
+	--font-mv-sans: 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
 
 	/* O Marvin fecha bem mais os cantos que a Marietta: raio base
 	   0.5rem contra 1rem. Isso muda o caráter — vale respeitar. */
@@ -1008,36 +1028,73 @@ h1, h2, h3, h4 {
 @supports not (color: oklch(0% 0 0)) {
 	:root {
 		--mv-wine: #824434;      --mv-terracotta: #cd6e4c;
+		--mv-terracotta-text: #9d4a2c;
 		--mv-caramel: #c59361;   --mv-cream: #fbf6ee;
 		--mv-sand: #f2eade;      --mv-ink: #362b25;
 		--mv-olive: #686d45;     --mv-clay: #633c2e;
-		--mv-bottle: #153b29;    --mv-border: #ded6cd;
+		--mv-green: #51562d;    --mv-border: #ded6cd;
 	}
 }
 
+/* ------------------------------------------------------------------
+   GRAPHIK — PENDENTE DE LICENÇA WEB
+   Mesma situação da LP do Marvin: os .ttf disponíveis trazem embutido
+   "Not to be used for anything other than desktop use!". Não podem ser
+   servidos como webfont. Chegando os .woff2 licenciados da Commercial
+   Type, copie para esta pasta e descomente o bloco abaixo.
+   ------------------------------------------------------------------ */
+
+/*
 @font-face {
-	font-family: 'Playfair Display';
+	font-family: 'Graphik';
 	font-style: normal;
-	font-weight: 400 700;
+	font-weight: 500;
 	font-display: swap;
-	src: url('playfair-latin.woff2') format('woff2');
+	src: url('graphik-medium.woff2') format('woff2');
+}
+
+@font-face {
+	font-family: 'Graphik';
+	font-style: normal;
+	font-weight: 700;
+	font-display: swap;
+	src: url('graphik-bold.woff2') format('woff2');
+}
+
+@font-face {
+	font-family: 'Graphik';
+	font-style: italic;
+	font-weight: 500;
+	font-display: swap;
+	src: url('graphik-medium-italic.woff2') format('woff2');
+}
+*/
+
+/* HANKEN GROTESK — licença SIL OFL, pode ser empacotada. */
+@font-face {
+	font-family: 'Hanken Grotesk';
+	font-style: normal;
+	font-weight: 100 900;
+	font-display: swap;
+	src: url('hanken-grotesk-latin.woff2') format('woff2');
 	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
 		U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC,
 		U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
-/* O itálico do Playfair é o gesto de ênfase da marca — "Três formas de
-   *aproveitar*". Sem este arquivo o navegador falsearia a inclinação. */
+/* Itálico real. Sem este arquivo o navegador falsearia a inclinação —
+   e o <em> é o gesto de ênfase da marca. */
 @font-face {
-	font-family: 'Playfair Display';
+	font-family: 'Hanken Grotesk';
 	font-style: italic;
-	font-weight: 400 500;
+	font-weight: 100 900;
 	font-display: swap;
-	src: url('playfair-latin-italic.woff2') format('woff2');
+	src: url('hanken-grotesk-latin-italic.woff2') format('woff2');
 	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
 		U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC,
 		U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
+
 
 /* -------------------------------------------------------------------
    ESCOPO DE MARCA
@@ -1067,6 +1124,7 @@ h1, h2, h3, h4 {
 
 	/* Tipografia e forma também mudam — não é só troca de cor. */
 	--font-display: var(--font-mv-display);
+	--font-sans: var(--font-mv-sans);
 	--radius: var(--mv-radius);
 	--radius-2xl: calc(var(--mv-radius) + 4px);
 	--radius-3xl: calc(var(--mv-radius) + 8px);
@@ -1075,17 +1133,23 @@ h1, h2, h3, h4 {
 
 	color: var(--mv-ink);
 	background-color: var(--mv-cream);
+	/* reaplica a familia no proprio escopo: redefinir --font-sans nao
+	   basta, porque os filhos herdam o font-family JA RESOLVIDO do
+	   body (Inter), nao a variavel. Sem esta linha o corpo do bloco
+	   do Marvin continuaria em Inter. */
+	font-family: var(--font-mv-sans);
 }
 
-/* Títulos do Marvin: Playfair em wine, peso 400, sem o tracking
-   negativo da Marietta — uma serifada em corpo grande pede o contrário. */
+/* Títulos do Marvin: Graphik Bold em wine. O tracking negativo volta —
+   uma grotesca em corpo grande pede aperto, ao contrário da serifada
+   que estava aqui antes. */
 [data-brand='marvin'] h1,
 [data-brand='marvin'] h2,
 [data-brand='marvin'] h3,
 [data-brand='marvin'] h4 {
 	font-family: var(--font-mv-display);
-	font-weight: 400;
-	letter-spacing: 0;
+	font-weight: 700;
+	letter-spacing: -.02em;
 	line-height: 1.1;
 	color: var(--mv-wine);
 }
@@ -1103,7 +1167,7 @@ h1, h2, h3, h4 {
 [data-brand='marvin'] .eyebrow {
 	font-size: .625rem;
 	letter-spacing: .3em;
-	color: var(--mv-terracotta);
+	color: var(--mv-terracotta-text);
 }
 
 /* Botões: caixa alta com tracking largo e sombra wine, não preta */
@@ -1168,23 +1232,26 @@ h1, h2, h3, h4 {
 	color: var(--foreground);
 }
 
-/* No bloco do Marvin o nome vira o wordmark do site: Playfair
-   semibold, caixa alta, tracking .22em — como aparece no header dele. */
+/* No bloco do Marvin o nome vira o wordmark da marca: Graphik Bold,
+   caixa alta, tracking .22em. A logo foi desenhada com a própria
+   fonte, então acompanha a troca de --font-mv-display. */
 .brand--marvin {
 	background-color: var(--mv-cream);
 	border-color: var(--mv-border);
 }
 .brand--marvin .brand__name {
 	font-family: var(--font-mv-display);
-	font-weight: 600;
+	font-weight: 700;
 	font-size: var(--text-2xl);
 	letter-spacing: .22em;
 	text-transform: uppercase;
 	color: var(--mv-wine);
 }
+/* Fecho do bloco é subtítulo, não título: o manual manda Graphik só
+   em título de verdade, então aqui vale a Hanken. */
 .brand--marvin .brand__closing {
-	font-family: var(--font-mv-display);
-	letter-spacing: 0;
+	font-family: var(--font-mv-sans);
+	letter-spacing: -.01em;
 	color: var(--mv-wine);
 }
 .brand--marvin .body,
@@ -1194,13 +1261,15 @@ h1, h2, h3, h4 {
 
 /* -------------------------------------------------------------------
    PAINEL EM BOTTLE — a seção de destaque escura do Marvin
-   No site é o bloco "Desde 2000…": fundo bottle, título Playfair
-   centrado com ênfase em itálico e uma barrinha cream embaixo.
-   Usa bottle (verde escuro) em vez de wine porque o verde faz a ponte
-   com a Marietta — é co-branding, não substituição de marca.
+   No site é o bloco "Desde 2000…": fundo escuro, título centrado com
+   ênfase em itálico e uma barrinha cream embaixo.
+   A superfície é o VERDE DA MARIETTA, não o do Marvin: a seção fala
+   do app das duas marcas, e o painel é o lado Marietta do par. O que
+   vem do Marvin aqui é a tipografia — Graphik Bold, ênfase em itálico,
+   eyebrow, barrinha e faixa de atributos.
    ------------------------------------------------------------------- */
 .panel--marvin {
-	background-color: var(--mv-bottle);
+	background-color: var(--mt-green);
 	color: var(--mv-cream);
 	position: relative;
 	overflow: hidden;
@@ -1220,28 +1289,34 @@ h1, h2, h3, h4 {
 .panel--marvin > * { position: relative; }
 
 .panel--marvin h2,
-.panel--marvin h3,
-.panel--marvin .brand__closing {
+.panel--marvin h3 {
 	font-family: var(--font-mv-display);
-	font-weight: 400;
-	letter-spacing: 0;
+	font-weight: 700;
+	letter-spacing: -.02em;
 	color: var(--mv-cream);
 }
 
-/* Eyebrow sobre bottle usa CARAMEL, não terracotta. No site do Marvin
-   a terracotta só aparece sobre cream; sobre o verde escuro ela dá
-   3,5:1 — abaixo do 4,5:1 que a WCAG pede para texto pequeno. Caramel
-   é o acento claro da mesma paleta e resolve sem inventar cor. */
+/* Fecho é subtítulo: fonte de texto, não a de título. */
+.panel--marvin .brand__closing {
+	font-family: var(--font-mv-sans);
+	font-weight: 400;
+	letter-spacing: -.01em;
+	color: var(--mv-cream);
+}
+
+/* Eyebrow sobre o verde: nem terracotta (2,2:1) nem caramel (2,8:1)
+   alcançam o 4,5:1 que a WCAG pede para texto pequeno neste oliva.
+   Creme a 85% dá 5,7:1 e é o que resolve. */
 .panel--marvin .eyebrow {
-	color: var(--mv-caramel);
+	color: color-mix(in srgb, var(--mv-cream) 85%, transparent);
 	opacity: 1;
 	font-size: .625rem;
 	letter-spacing: .3em;
 }
 
 .panel--marvin .display {
-	font-family: var(--font-mv-display);
-	letter-spacing: 0;
+	font-family: var(--font-mv-sans);
+	letter-spacing: -.01em;
 }
 
 .panel--marvin .body,
@@ -1249,8 +1324,9 @@ h1, h2, h3, h4 {
 	color: color-mix(in srgb, var(--mv-cream) 78%, transparent);
 }
 
+/* 70% dava 4,48:1 sobre este oliva — 78% dá 5,14:1, igual ao corpo */
 .panel--marvin .note {
-	color: color-mix(in srgb, var(--mv-cream) 70%, transparent);
+	color: color-mix(in srgb, var(--mv-cream) 78%, transparent);
 	opacity: 1;
 }
 
@@ -1267,7 +1343,7 @@ h1, h2, h3, h4 {
 	background-color: color-mix(in srgb, var(--mv-cream) 30%, transparent);
 }
 
-/* Botão invertido sobre bottle: papel com texto wine */
+/* Botão invertido sobre o verde: papel com texto wine */
 .panel--marvin .btn--onprimary {
 	background-color: var(--mv-cream);
 	color: var(--mv-wine);
@@ -1283,15 +1359,16 @@ h1, h2, h3, h4 {
 	opacity: 1;
 }
 
-/* Sobre o painel bottle a faixa precisa inverter: o ink de 55% sobre
-   verde escuro ficaria ilegível. */
+/* Sobre o painel verde a faixa precisa inverter: o ink sobre verde
+   escuro ficaria ilegível. */
 .panel--marvin .attrs {
 	border-block-color: color-mix(in srgb, var(--mv-cream) 18%, transparent);
 	background-color: color-mix(in srgb, var(--mv-cream) 6%, transparent);
 	margin-top: 1.5rem;
 }
+/* 65% dava 3,72:1 sobre o oliva — 80% dá 5,3:1 */
 .panel--marvin .attrs li {
-	color: color-mix(in srgb, var(--mv-cream) 65%, transparent);
+	color: color-mix(in srgb, var(--mv-cream) 80%, transparent);
 }
 
 /* Faixa de atributos do Marvin — ponto terracotta em vez de ícone */
@@ -1313,7 +1390,8 @@ h1, h2, h3, h4 {
 	line-height: 1;
 	text-transform: uppercase;
 	letter-spacing: .24em;
-	color: color-mix(in srgb, var(--mv-ink) 55%, transparent);
+	/* 55% dava 3,2:1 sobre o sand — sobe para 70% */
+	color: color-mix(in srgb, var(--mv-ink) 70%, transparent);
 }
 .attrs li::before {
 	content: '';

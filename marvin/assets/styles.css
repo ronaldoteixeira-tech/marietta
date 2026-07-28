@@ -109,6 +109,17 @@
    os acentos do português). Licença SIL OFL, pode ser empacotada. */
 @font-face {
 	font-family: 'Hanken Grotesk';
+	font-style: italic;
+	font-weight: 100 900;
+	font-display: swap;
+	src: url('hanken-grotesk-latin-italic.woff2') format('woff2');
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+		U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC,
+		U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+	font-family: 'Hanken Grotesk';
 	font-style: normal;
 	font-weight: 100 900;
 	font-display: swap;
@@ -139,7 +150,10 @@
 	--ink:        oklch(30% .02 50);      /* #362B25 — texto          */
 	--olive:      oklch(52% .06 115);     /* #686D45 — apoio          */
 	--clay:       oklch(40% .06 40);      /* #633C2E — apoio          */
-	--bottle:     oklch(32% .055 160);    /* #153B29 — seção escura   */
+	/* Verde da marca, definido pelo manual. O site usa um bottle mais
+	   escuro (#153B29); este é o oliva do briefing e é o que vale.
+	   Renomeei o token: guardar um oliva num --bottle seria mentira. */
+	--green:      oklch(43.8% .061 115);  /* #51562D — verde Marvin   */
 	--border:     oklch(88% .015 70);     /* #DED6CD — bordas         */
 	--destructive: oklch(55% .22 27);     /* erro                     */
 
@@ -176,7 +190,7 @@
 	--shadow-2xl: 0 25px 50px -12px #00000040;
 	/* sombras próprias do sistema — wine e terra, nunca preto puro */
 	/* a sombra do CTA acompanha a cor do botao — verde, nunca preta */
-	--shadow-cta: 0 18px 40px -20px color-mix(in srgb, var(--bottle) 60%, transparent);
+	--shadow-cta: 0 18px 40px -20px color-mix(in srgb, var(--green) 60%, transparent);
 	--shadow-frame: 0 30px 80px -40px rgba(45, 30, 20, .45);
 
 	/* Movimento: um easing só, durações longas. */
@@ -197,7 +211,7 @@
 		--caramel: #c59361;   --cream: #fbf6ee;
 		--sand: #f2eade;      --ink: #362b25;
 		--olive: #686d45;     --clay: #633c2e;
-		--bottle: #153b29;    --border: #ded6cd;
+		--green: #153b29;    --border: #ded6cd;
 		--destructive: #d40c1a;
 	}
 }
@@ -278,12 +292,12 @@ button, input, textarea, select {
 
 /* 04. TIPOGRAFIA ==================================================== */
 
-/* Títulos: Graphik Medium em wine. O tracking negativo volta — uma
+/* Títulos: Graphik Bold em wine. O tracking negativo volta — uma
    grotesca em corpo grande pede aperto, ao contrário da serifada que
    estava aqui antes. */
 h1, h2, h3, h4 {
 	font-family: var(--font-display);
-	font-weight: 500;
+	font-weight: 700;
 	line-height: 1.1;
 	letter-spacing: -.02em;
 	color: var(--wine);
@@ -295,9 +309,12 @@ h1, h2, h3, h4 {
 .h4 { font-size: var(--text-xl); line-height: var(--lh-xl); }
 
 /* Destaque em verde. Aplicado no <em> da oferta e em números que
-   precisam saltar. Sobre cream dá 11:1, sobre sand 10:1. */
-.bottle { color: var(--bottle); }
-.dark .bottle { color: var(--caramel); }
+   precisam saltar. Sobre cream dá 7,2:1, sobre sand 6,5:1. */
+/* nowrap para a oferta nao rachar entre linhas — "10%" numa linha e
+   "OFF" na outra desmonta o valor que o numero carrega */
+.green { color: var(--green); white-space: nowrap; }
+/* sobre o oliva o caramel dá 2,8:1; o creme cheio dá 7,2:1 */
+.dark .green { color: var(--cream); }
 
 /* Ênfase em itálico — a assinatura tipográfica do Marvin.
    Com a Graphik o gesto fica mais discreto que na serifada, mas é a
@@ -445,7 +462,7 @@ em {
    então o wordmark segue --font-display e troca junto com ela. */
 .wordmark {
 	font-family: var(--font-display);
-	font-weight: 600;
+	font-weight: 700;
 	font-size: var(--text-base);
 	letter-spacing: .22em;
 	text-transform: uppercase;
@@ -480,32 +497,31 @@ em {
 .btn svg { flex-shrink: 0; }
 
 /* AÇÃO = VERDE. O wine continua sendo a voz da marca (títulos e
-   wordmark); o bottle passa a ser a cor de ação. A divisão deixa o
-   CTA saltar em vez de se confundir com o texto ao redor — e o
-   contraste melhora: creme sobre bottle dá 11,5:1 contra os 6,9:1
-   que dava sobre wine. */
+   wordmark); o verde passa a ser a cor de ação. A divisão deixa o
+   CTA saltar em vez de se confundir com o texto ao redor. Creme
+   sobre o verde dá 7,2:1. */
 .btn--primary {
-	background-color: var(--bottle);
+	background-color: var(--green);
 	color: var(--cream);
 	box-shadow: var(--shadow-cta);
 }
 .btn--primary:hover {
 	transform: translateY(-2px);
-	background-color: color-mix(in oklab, var(--bottle) 88%, transparent);
+	background-color: color-mix(in oklab, var(--green) 88%, transparent);
 }
 
 .btn--outline {
-	border: 1px solid color-mix(in srgb, var(--bottle) 35%, transparent);
-	color: var(--bottle);
+	border: 1px solid color-mix(in srgb, var(--green) 35%, transparent);
+	color: var(--green);
 }
 .btn--outline:hover {
-	background-color: color-mix(in srgb, var(--bottle) 6%, transparent);
+	background-color: color-mix(in srgb, var(--green) 6%, transparent);
 }
 
 /* Sobre superfície escura: papel com texto na cor de ação */
 .btn--invert {
 	background-color: var(--cream);
-	color: var(--bottle);
+	color: var(--green);
 	box-shadow: var(--shadow-2xl);
 }
 .btn--invert:hover { transform: translateY(-2px); }
@@ -547,7 +563,7 @@ em {
 	line-height: 1.4;
 	text-transform: uppercase;
 	letter-spacing: .24em;
-	color: var(--bottle);
+	color: var(--green);
 }
 
 /* Faixa de atributos — ponto terracotta em vez de ícone */
@@ -594,7 +610,7 @@ em {
 .checks svg {
 	margin-top: .3rem;
 	flex-shrink: 0;
-	color: var(--bottle);
+	color: var(--green);
 }
 
 
@@ -650,11 +666,11 @@ em {
 	padding: 2rem;
 }
 
-/* Seção escura em bottle — o bloco de destaque do sistema */
+/* Seção escura no verde da marca — o bloco de destaque do sistema */
 .dark {
 	position: relative;
 	overflow: hidden;
-	background-color: var(--bottle);
+	background-color: var(--green);
 	color: var(--cream);
 }
 .dark::before {
@@ -669,28 +685,29 @@ em {
 .dark > * { position: relative; }
 /* .display e demais titulos: precisa listar .display porque ele e um
    <p>, nao um heading — o seletor de elemento nao o alcanca e ele
-   ficaria wine sobre bottle (1,67:1). */
+   ficaria wine sobre o verde escuro, ilegível. */
 .dark h1, .dark h2, .dark h3, .dark .display { color: var(--cream); }
-/* terracotta sobre bottle dá 3,5:1 — abaixo do mínimo da WCAG para
-   texto pequeno. Caramel é o acento claro da mesma paleta. */
-.dark .eyebrow { color: var(--caramel); }
+/* terracotta sobre o verde dá 2,2:1 e o caramel 2,8:1 — os dois abaixo
+   do mínimo. Sobre este oliva só o creme resolve. */
+/* caramel dava 2,8:1 sobre o oliva — creme a 85% dá 5,7:1 */
+.dark .eyebrow { color: color-mix(in srgb, var(--cream) 85%, transparent); }
 .dark .body, .dark .lead { color: color-mix(in srgb, var(--cream) 78%, transparent); }
-.dark .note { color: color-mix(in srgb, var(--cream) 70%, transparent); }
-/* .meta usa ink — sobre bottle ficaria em 1,07:1, ou seja, invisivel */
-.dark .meta { color: color-mix(in srgb, var(--cream) 70%, transparent); }
+/* 70%% dava 4,48:1 sobre este oliva — 78%% dá 5,14:1, igual ao corpo */
+.dark .note { color: color-mix(in srgb, var(--cream) 78%, transparent); }
+/* .meta usa ink — sobre o verde ficaria invisivel */
+.dark .meta { color: color-mix(in srgb, var(--cream) 78%, transparent); }
 .dark .checks li { color: color-mix(in srgb, var(--cream) 78%, transparent); }
-.dark .checks svg { color: var(--caramel); }
+.dark .checks svg { color: color-mix(in srgb, var(--cream) 85%, transparent); }
 .dark .rule { background-color: color-mix(in srgb, var(--cream) 30%, transparent); }
 
-/* Barrinha divisória. Em fundo claro vai de bottle — o verde da marca,
-   que o site usa como cor de texto e superfície secundária. Antes era
+/* Barrinha divisória. Em fundo claro vai do verde da marca. Antes era
    cream em qualquer contexto, o que a deixava invisível fora do
    painel escuro. A variante clara segue no .dark, mais abaixo. */
 .rule {
 	width: 3rem;
 	height: .375rem;
 	border-radius: 9999px;
-	background-color: var(--bottle);
+	background-color: var(--green);
 }
 .rule--center { margin-inline: auto; }
 
@@ -934,18 +951,24 @@ em {
 }
 
 @media (min-width: 1024px) {
-	/* Hero em 12 colunas: texto em 5, imagem em 7 — como no site. */
+	/* Hero em duas colunas proporcionais.
+	   O site usa grid-cols-12 com gap-12, mas ali o h1 é uma palavra só
+	   ("Marvin"): com 11 gaps de 48px, metade da largura vira vão e
+	   sobram ~420px de texto. Aqui o título é uma frase inteira, então
+	   a grade de 12 não serve — duas colunas com um gap só devolvem
+	   ~590px ao texto e ainda deixam a imagem confortável. */
 	.split--hero {
-		grid-template-columns: repeat(12, minmax(0, 1fr));
-		gap: 3rem;
-		align-items: end;
+		grid-template-columns: 1.18fr .82fr;
+		gap: 4rem;
+		align-items: center;
 	}
-	.split--hero > :first-child { grid-column: span 5 / span 5; padding-bottom: 4rem; }
-	.split--hero > :last-child { grid-column: span 7 / span 7; }
+	.split--hero > :first-child { padding-bottom: 0; }
 
 	.split--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4rem; align-items: center; }
 	.split--form { grid-template-columns: 1fr 25rem; gap: 4rem; align-items: start; }
 
-	.h1 { font-size: 4.25rem; }
-	.h1__sub { font-size: 2.75rem; }
+	/* 4.25rem servia ao "Marvin" de uma palavra do site; numa frase
+	   inteira empilha demais. 3.5rem mantém a presença e respira. */
+	.h1 { font-size: 3.5rem; }
+	.h1__sub { font-size: 2.5rem; }
 }
