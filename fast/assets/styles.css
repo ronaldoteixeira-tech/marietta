@@ -1,0 +1,972 @@
+/* ===================================================================
+   MARIETTA FAST — LANDING PAGE DE PRIMEIRA COMPRA
+   CSS escrito à mão sobre o design system extraído de website-marietta/.
+   É o MESMO arquivo da LP do café: mesma marca, mesmo sistema.
+
+   Cor, escala tipográfica, raios, sombras, easings e keyframes são os
+   MESMOS valores compilados em
+   website-marietta/assets/ef5ca77b338101a3_styles-BnBg8vrK.css — copiados
+   literalmente, não reinterpretados. Ver website-marietta/design-system.html.
+
+   Inclui a tipografia: Fraunces nos títulos, Inter nos textos.
+
+   Sumário
+     01. Fontes
+     02. Tokens
+     03. Reset & base
+     04. Tipografia
+     05. Layout
+     06. Cabeçalho
+     07. Botões
+     08. Pílulas, eyebrows e ícones
+     09. Cards
+     10. Formulário
+     11. Rodapé
+     12. Movimento
+     13. Responsivo
+   =================================================================== */
+
+
+/* 01. FONTES ======================================================== */
+/* Fraunces (títulos) + Inter (textos) — a dupla do site da Marietta.
+   Ver website-marietta/design-system.html. */
+
+@font-face {
+	font-family: 'Fraunces';
+	font-style: normal;
+	font-weight: 400 600;
+	font-display: swap;
+	src: url('fraunces-latin.woff2') format('woff2');
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+		U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC,
+		U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+	font-family: 'Inter';
+	font-style: normal;
+	font-weight: 400 700;
+	font-display: swap;
+	src: url('inter-latin.woff2') format('woff2');
+	unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+		U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC,
+		U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+
+/* 02. TOKENS ======================================================== */
+
+:root {
+	/* cor — valores idênticos ao :root do CSS original */
+	--background: #fdfcf8;
+	--foreground: #141d16;
+	--card: #ffffff;
+	--primary: #225a31;
+	--primary-foreground: #fcfaf3;
+	--primary-soft: #62bb78;
+	--secondary: #f7f1e5;
+	--muted: #f5f2e9;
+	--muted-foreground: #50584e;
+	--accent: #e7d4bb;
+	--destructive: #d40c1a;
+	--border: #e1ded5;
+	--input: #e1ded5;
+	--ring: #225a31;
+
+	/* tipografia */
+	--font-display: 'Fraunces', ui-serif, Georgia, serif;
+	--font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+
+	--text-xs: .75rem;      --lh-xs: 1rem;
+	--text-sm: .875rem;     --lh-sm: 1.25rem;
+	--text-base: 1rem;      --lh-base: 1.5rem;
+	--text-lg: 1.125rem;    --lh-lg: 1.75rem;
+	--text-xl: 1.25rem;     --lh-xl: 1.75rem;
+	--text-2xl: 1.5rem;     --lh-2xl: 2rem;
+	--text-3xl: 1.875rem;   --lh-3xl: 2.25rem;
+	--text-4xl: 2.25rem;    --lh-4xl: 2.5rem;
+	--text-5xl: 3rem;       --lh-5xl: 1;
+	--text-6xl: 3.75rem;    --lh-6xl: 1;
+
+	--leading-snug: 1.375;
+	--leading-relaxed: 1.625;
+
+	/* forma */
+	--radius: 1rem;
+	--radius-2xl: calc(var(--radius) + 8px);   /* 24px */
+	--radius-3xl: calc(var(--radius) + 12px);  /* 28px */
+	--radius-4xl: 2rem;                        /* 32px */
+
+	/* sombra */
+	--shadow-md: 0 4px 6px -1px #0000001a, 0 2px 4px -2px #0000001a;
+	--shadow-lg: 0 10px 15px -3px #0000001a, 0 4px 6px -4px #0000001a;
+	--shadow-2xl: 0 25px 50px -12px #00000040;
+
+	/* movimento */
+	--ease: cubic-bezier(.4, 0, .2, 1);
+	--ease-out-expo: cubic-bezier(.22, 1, .36, 1);
+	--dur: .15s;
+
+	/* layout */
+	--container: 80rem;
+	--gutter: 1.25rem;
+	--header-h: 4rem;
+}
+
+/* Espaço de cor idêntico ao original: o CSS de referência entrega os
+   mesmos tokens em lab() quando o navegador suporta, o que evita
+   diferença de matiz entre a LP e o site. */
+@supports (color: lab(0% 0 0)) {
+	:root {
+		--background: lab(98.8714% -.1598 1.89867);
+		--foreground: lab(9.78257% -5.94573 3.80925);
+		--card: lab(100% 0 0);
+		--primary: lab(33.8567% -27.1354 17.8475);
+		--primary-foreground: lab(98.322% -.305593 3.80681);
+		--primary-soft: lab(69.1791% -39.0255 25.483);
+		--secondary: lab(95.4296% .560433 6.89434);
+		--muted: lab(95.421% -.00339746 4.5949);
+		--muted-foreground: lab(36.4541% -5.21055 4.90276);
+		--accent: lab(86.1264% 3.87201 15.1097);
+		--destructive: lab(45.5806% 69.4641 51.3946);
+		--border: lab(88.4608% -.00050664 4.59685);
+		--input: lab(88.4608% -.00050664 4.59685);
+		--ring: lab(33.8567% -27.1354 17.8475);
+	}
+}
+
+
+/* 03. RESET & BASE ================================================== */
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	border: 0 solid;
+}
+
+html {
+	-webkit-text-size-adjust: 100%;
+	scroll-behavior: smooth;
+}
+
+body {
+	background-color: var(--background);
+	color: var(--foreground);
+	font-family: var(--font-sans);
+	font-size: var(--text-base);
+	line-height: var(--lh-base);
+	font-feature-settings: 'ss01', 'cv11';
+	-webkit-font-smoothing: antialiased;
+	text-rendering: optimizeLegibility;
+}
+
+img, svg, video {
+	display: block;
+	max-width: 100%;
+	height: auto;
+	vertical-align: middle;
+}
+
+a {
+	color: inherit;
+	text-decoration: none;
+}
+
+ul, ol { list-style: none; }
+
+button, input, textarea, select {
+	font: inherit;
+	color: inherit;
+	background-color: transparent;
+	border-radius: 0;
+}
+
+:focus-visible {
+	outline: 2px solid var(--ring);
+	outline-offset: 2px;
+}
+
+::selection {
+	background-color: var(--primary);
+	color: var(--primary-foreground);
+}
+
+.sr-only {
+	position: absolute;
+	width: 1px; height: 1px;
+	padding: 0; margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border-width: 0;
+}
+
+.skip-link {
+	position: absolute;
+	left: -9999px;
+	top: 0;
+	z-index: 100;
+	background-color: var(--primary);
+	color: var(--primary-foreground);
+	padding: .75rem 1.25rem;
+	border-radius: 0 0 var(--radius) 0;
+	font-size: var(--text-sm);
+	font-weight: 500;
+}
+.skip-link:focus {
+	left: 0;
+}
+
+
+/* 04. TIPOGRAFIA ==================================================== */
+
+/* Regra de base do design system: h1–h4 são tipos display por si
+   mesmos — peso 500, entrelinha 1.1 e tracking -.02em sem classe. */
+h1, h2, h3, h4 {
+	font-family: var(--font-display);
+	font-weight: 500;
+	line-height: 1.1;
+	letter-spacing: -.02em;
+}
+
+.h1 {
+	font-size: var(--text-5xl);
+	line-height: var(--lh-5xl);
+}
+
+.h2 {
+	font-size: var(--text-4xl);
+	line-height: var(--lh-4xl);
+}
+
+.h3 {
+	font-size: var(--text-2xl);
+	line-height: var(--lh-2xl);
+}
+
+.h4 {
+	font-size: var(--text-xl);
+	line-height: var(--lh-xl);
+}
+
+/* <p> com fonte display fica em 400, sem tracking — igual ao original */
+.display {
+	font-family: var(--font-display);
+	font-weight: 400;
+}
+
+.eyebrow {
+	font-size: var(--text-xs);
+	line-height: var(--lh-xs);
+	font-weight: 500;
+	text-transform: uppercase;
+	letter-spacing: .22em;
+	color: var(--primary);
+}
+
+.lead {
+	font-size: var(--text-lg);
+	line-height: var(--leading-relaxed);
+	color: var(--muted-foreground);
+}
+
+.body {
+	font-size: var(--text-base);
+	line-height: var(--leading-relaxed);
+	color: var(--muted-foreground);
+}
+
+.body-sm {
+	font-size: var(--text-sm);
+	line-height: var(--lh-sm);
+	color: var(--muted-foreground);
+}
+
+.note {
+	font-size: var(--text-xs);
+	line-height: var(--lh-xs);
+	color: var(--muted-foreground);
+}
+
+.accent { color: var(--primary); }
+.text-center { text-align: center; }
+.strong { font-weight: 500; color: var(--foreground); }
+
+.measure { max-width: 36rem; }
+.measure-sm { max-width: 28rem; }
+
+
+/* 05. LAYOUT ======================================================== */
+
+.container {
+	width: 100%;
+	max-width: var(--container);
+	margin-inline: auto;
+	padding-inline: var(--gutter);
+}
+
+.section {
+	padding-block: 4rem;
+}
+
+.section--lg {
+	padding-block: 5rem;
+}
+
+/* Primeira seção: precisa vencer a altura do cabeçalho fixo, igual ao
+   `pt-16 md:pt-20` que o site de origem aplica no <main>. */
+.section--hero {
+	padding-top: calc(var(--header-h) + 2.5rem);
+}
+
+.section--tint {
+	background-color: color-mix(in srgb, var(--secondary) 40%, transparent);
+}
+
+.section--divide {
+	border-top: 1px solid var(--border);
+}
+
+/* Escala de espaço do design system: passo de 4px (--spacing: .25rem) */
+.mt-1  { margin-top: .25rem; }
+.mt-2  { margin-top: .5rem; }
+.mt-3  { margin-top: .75rem; }
+.mt-4  { margin-top: 1rem; }
+.mt-5  { margin-top: 1.25rem; }
+.mt-6  { margin-top: 1.5rem; }
+.mt-8  { margin-top: 2rem; }
+.mt-10 { margin-top: 2.5rem; }
+.mt-12 { margin-top: 3rem; }
+
+.section-head {
+	max-width: 42rem;
+}
+.section-head .h2 { margin-top: .75rem; }
+.section-head .body { margin-top: 1rem; }
+
+.grid {
+	display: grid;
+	gap: 1.5rem;
+}
+
+.split {
+	display: grid;
+	gap: 2.5rem;
+	align-items: center;
+}
+
+
+/* 06. CABEÇALHO ===================================================== */
+
+.header {
+	position: fixed;
+	top: 0;
+	inset-inline: 0;
+	z-index: 50;
+	background-color: transparent;
+	transition: all .3s var(--ease);
+}
+
+/* Estado rolado — mesma combinação do header do site de origem */
+.header.is-scrolled {
+	background-color: color-mix(in srgb, var(--background) 85%, transparent);
+	backdrop-filter: blur(12px);
+	-webkit-backdrop-filter: blur(12px);
+	border-bottom: 1px solid var(--border);
+}
+
+.header__inner {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	height: var(--header-h);
+}
+
+.header__logo img {
+	height: 2.5rem;
+	width: auto;
+}
+
+/* O site de origem esconde o CTA do header no mobile (`hidden
+   md:inline-flex`) porque lá existe um menu hambúrguer ao lado. Aqui
+   não há navegação nenhuma, então esconder deixaria o header mobile
+   só com o logo — e uma LP não desperdiça um CTA sempre visível.
+   Ele fica, mas compacto, para nunca disputar espaço com o logo. */
+/* Compound (.btn.header__cta) de proposito: `.btn` vem depois no
+   arquivo e, com especificidade igual, venceria estas declaracoes. */
+.btn.header__cta {
+	padding: .625rem 1rem;
+	font-size: var(--text-xs);
+	line-height: var(--lh-xs);
+}
+
+
+/* 07. BOTÕES ======================================================== */
+
+.btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: .5rem;
+	/* Piso de alvo de toque (WCAG 2.5.8 / 44px). Só tem efeito prático
+	   no CTA compacto do header — os demais já passam disso. */
+	min-height: 2.75rem;
+	border-radius: 9999px;
+	font-size: var(--text-sm);
+	line-height: var(--lh-sm);
+	font-weight: 500;
+	text-align: center;
+	cursor: pointer;
+	padding: .875rem 1.5rem;
+	transition: background-color var(--dur) var(--ease),
+		color var(--dur) var(--ease),
+		border-color var(--dur) var(--ease),
+		opacity var(--dur) var(--ease),
+		box-shadow var(--dur) var(--ease);
+}
+
+.btn svg { flex-shrink: 0; }
+
+.btn--primary {
+	background-color: var(--primary);
+	color: var(--primary-foreground);
+}
+.btn--primary:hover {
+	background-color: color-mix(in oklab, var(--primary) 90%, transparent);
+}
+
+.btn--outline {
+	border: 1px solid color-mix(in srgb, var(--foreground) 15%, transparent);
+	background-color: var(--background);
+	color: var(--foreground);
+}
+.btn--outline:hover {
+	background-color: var(--accent);
+}
+
+/* Botão sobre superfície verde — inverte para papel */
+.btn--onprimary {
+	background-color: var(--background);
+	color: var(--foreground);
+}
+.btn--onprimary:hover { opacity: .9; }
+
+.btn--lg {
+	padding: 1rem 1.75rem;
+}
+
+.btn--block {
+	display: flex;
+	width: 100%;
+}
+
+/* CTA em caixa alta, como no roteiro de copy */
+.btn--caps {
+	text-transform: uppercase;
+	letter-spacing: .04em;
+}
+
+.btn:disabled,
+.btn[aria-disabled='true'] {
+	opacity: .5;
+	pointer-events: none;
+}
+
+.link-arrow {
+	display: inline-flex;
+	align-items: center;
+	gap: .375rem;
+	font-size: var(--text-sm);
+	font-weight: 500;
+	color: var(--primary);
+}
+.link-arrow:hover { text-decoration: underline; }
+
+
+/* 08. PÍLULAS, EYEBROWS E ÍCONES ==================================== */
+
+.badge {
+	display: inline-flex;
+	align-items: center;
+	gap: .5rem;
+	border-radius: 9999px;
+	background-color: color-mix(in srgb, var(--primary) 10%, transparent);
+	color: var(--primary);
+	padding: .25rem .75rem;
+	font-size: var(--text-xs);
+	line-height: var(--lh-xs);
+	font-weight: 500;
+	text-transform: uppercase;
+	letter-spacing: .18em;
+}
+
+.icon-circle {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	width: 2.75rem;
+	height: 2.75rem;
+	border-radius: 9999px;
+	background-color: color-mix(in srgb, var(--primary) 10%, transparent);
+	color: var(--primary);
+}
+
+.icon-pill {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	flex-shrink: 0;
+	width: 2.25rem;
+	height: 2.25rem;
+	border-radius: 9999px;
+	border: 1px solid var(--border);
+	color: color-mix(in srgb, var(--foreground) 70%, transparent);
+	transition: all var(--dur) var(--ease);
+}
+
+
+/* 09. CARDS ========================================================= */
+
+.card {
+	background-color: var(--card);
+	border: 1px solid var(--border);
+	border-radius: var(--radius-2xl);
+	padding: 1.5rem;
+}
+
+.card--flush {
+	padding: 0;
+	overflow: hidden;
+	border-radius: var(--radius-3xl);
+}
+
+/* Card de categoria — zoom lento na imagem + seta que inverte,
+   exatamente o gesto do card de categoria do site. */
+.cat {
+	display: block;
+	position: relative;
+	overflow: hidden;
+	background-color: var(--card);
+	border: 1px solid var(--border);
+	border-radius: var(--radius-3xl);
+	transition: box-shadow var(--dur) var(--ease),
+		translate var(--dur) var(--ease);
+}
+.cat:hover {
+	box-shadow: var(--shadow-lg);
+	translate: 0 -2px;
+}
+
+.cat__media {
+	aspect-ratio: 4 / 5;
+	overflow: hidden;
+	background-color: var(--muted);
+}
+
+.cat__media img {
+	height: 100%;
+	width: 100%;
+	object-fit: cover;
+	transition: scale .7s var(--ease);
+}
+.cat:hover .cat__media img { scale: 1.04; }
+
+.cat__body {
+	padding: 1.5rem;
+}
+
+.cat__head {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 1rem;
+}
+
+.cat__title {
+	font-size: var(--text-xl);
+	line-height: var(--lh-xl);
+}
+
+.cat:hover .icon-pill {
+	background-color: var(--primary);
+	color: var(--primary-foreground);
+	border-color: var(--primary);
+}
+
+.cat__text {
+	margin-top: .5rem;
+	font-size: var(--text-sm);
+	line-height: var(--leading-relaxed);
+	color: var(--muted-foreground);
+}
+
+/* Painel de superfície primária */
+.panel {
+	border-radius: var(--radius-4xl);
+	background-color: var(--primary);
+	color: var(--primary-foreground);
+	padding: 2.5rem;
+}
+.panel .eyebrow { color: inherit; opacity: .8; }
+.panel .body { color: color-mix(in srgb, var(--primary-foreground) 85%, transparent); }
+.panel .note { color: inherit; opacity: .8; }
+
+/* Moldura de imagem */
+.frame {
+	border-radius: var(--radius-4xl);
+	overflow: hidden;
+	background-color: var(--muted);
+}
+.frame img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+.frame--43 { aspect-ratio: 4 / 3; }
+
+/* Selo flutuante sobre a imagem do hero */
+.hero__media { position: relative; }
+
+.stat {
+	background-color: var(--background);
+	border: 1px solid var(--border);
+	border-radius: var(--radius-2xl);
+	box-shadow: var(--shadow-lg);
+	padding: 1.25rem;
+	max-width: 220px;
+}
+.stat__value {
+	font-family: var(--font-display);
+	font-size: var(--text-3xl);
+	line-height: var(--lh-3xl);
+	color: var(--primary);
+}
+.stat__label {
+	margin-top: .25rem;
+	font-size: var(--text-xs);
+	line-height: var(--lh-xs);
+	text-transform: uppercase;
+	letter-spacing: .18em;
+	color: var(--muted-foreground);
+}
+
+/* Lista de benefícios */
+.checks { display: grid; gap: .75rem; }
+.checks li {
+	display: flex;
+	gap: .625rem;
+	font-size: var(--text-sm);
+	line-height: var(--leading-relaxed);
+	color: var(--muted-foreground);
+}
+.checks svg {
+	margin-top: .2rem;
+	flex-shrink: 0;
+	color: var(--primary);
+}
+
+/* Bloco do cupom (página de obrigado) */
+.coupon {
+	border: 1px dashed color-mix(in srgb, var(--primary) 40%, transparent);
+	background-color: color-mix(in srgb, var(--primary) 10%, transparent);
+	border-radius: var(--radius-2xl);
+	padding: 1.5rem;
+	text-align: center;
+}
+.coupon__label {
+	font-size: var(--text-xs);
+	line-height: var(--lh-xs);
+	text-transform: uppercase;
+	letter-spacing: .18em;
+	color: var(--muted-foreground);
+}
+.coupon__code {
+	margin-top: .5rem;
+	font-family: var(--font-display);
+	font-size: var(--text-3xl);
+	line-height: var(--lh-3xl);
+	color: var(--primary);
+	letter-spacing: .02em;
+}
+.coupon__copy {
+	margin-top: 1rem;
+}
+
+
+/* 10. FORMULÁRIO ==================================================== */
+/* O site de origem não possui nenhum campo de formulário — este é o
+   único componente novo. Foi construído sobre os tokens --input e
+   --ring, que já existiam declarados no CSS original sem uso. */
+
+.form {
+	background-color: var(--card);
+	border: 1px solid var(--border);
+	border-radius: var(--radius-3xl);
+	padding: 1.75rem;
+	box-shadow: var(--shadow-lg);
+}
+
+.form__title {
+	font-size: var(--text-2xl);
+	line-height: var(--lh-2xl);
+}
+
+.form__fields {
+	margin-top: 1.5rem;
+	display: grid;
+	gap: 1.125rem;
+}
+
+.field label {
+	display: block;
+	font-size: var(--text-sm);
+	line-height: var(--lh-sm);
+	font-weight: 500;
+	color: var(--foreground);
+	margin-bottom: .375rem;
+}
+
+.field input {
+	display: block;
+	width: 100%;
+	border: 1px solid var(--input);
+	border-radius: var(--radius);
+	background-color: var(--background);
+	color: var(--foreground);
+	padding: .75rem 1rem;
+	font-size: var(--text-base);
+	line-height: var(--lh-base);
+	transition: border-color var(--dur) var(--ease),
+		box-shadow var(--dur) var(--ease);
+}
+
+.field input::placeholder {
+	color: color-mix(in srgb, var(--muted-foreground) 65%, transparent);
+}
+
+.field input:hover {
+	border-color: color-mix(in srgb, var(--primary) 35%, var(--input));
+}
+
+.field input:focus {
+	outline: none;
+	border-color: var(--ring);
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring) 18%, transparent);
+}
+
+/* Erro — só aparece depois da primeira tentativa de envio */
+.field__error {
+	display: none;
+	margin-top: .375rem;
+	font-size: var(--text-xs);
+	line-height: var(--lh-xs);
+	color: var(--destructive);
+}
+
+.field.is-invalid input {
+	border-color: var(--destructive);
+}
+.field.is-invalid input:focus {
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--destructive) 18%, transparent);
+}
+.field.is-invalid .field__error {
+	display: block;
+}
+
+.form__submit { margin-top: 1.5rem; }
+
+.form__legal {
+	margin-top: .875rem;
+	text-align: center;
+}
+
+
+/* 11. RODAPÉ ======================================================== */
+
+.footer {
+	background-color: color-mix(in srgb, var(--secondary) 60%, transparent);
+	border-top: 1px solid var(--border);
+	margin-top: 6rem;
+}
+
+.footer__inner {
+	padding-block: 3rem;
+	display: grid;
+	gap: 2rem;
+}
+
+.footer__brand {
+	font-family: var(--font-display);
+	font-size: var(--text-3xl);
+	line-height: var(--lh-3xl);
+}
+
+.footer__social {
+	display: flex;
+	align-items: center;
+	gap: .75rem;
+	margin-top: 1.5rem;
+}
+
+.social-pill {
+	display: inline-flex;
+	align-items: center;
+	gap: .5rem;
+	border-radius: 9999px;
+	border: 1px solid var(--border);
+	padding: .5rem 1rem;
+	font-size: var(--text-sm);
+	transition: background-color var(--dur) var(--ease);
+}
+.social-pill:hover { background-color: var(--background); }
+
+.social-icon {
+	display: inline-flex;
+	padding: .5rem;
+	border-radius: 9999px;
+	border: 1px solid var(--border);
+	transition: background-color var(--dur) var(--ease);
+}
+.social-icon:hover { background-color: var(--background); }
+
+.footer__links { display: grid; gap: .5rem; font-size: var(--text-sm); }
+.footer__links a:hover { color: var(--primary); }
+
+.footer__label {
+	font-size: var(--text-xs);
+	line-height: var(--lh-xs);
+	text-transform: uppercase;
+	letter-spacing: .18em;
+	color: var(--muted-foreground);
+	margin-bottom: 1rem;
+}
+
+.footer__bar {
+	border-top: 1px solid var(--border);
+}
+.footer__bar > div {
+	padding-block: 1.5rem;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: .75rem;
+	font-size: var(--text-xs);
+	line-height: var(--lh-xs);
+	color: var(--muted-foreground);
+	text-align: center;
+}
+
+
+/* 12. MOVIMENTO ===================================================== */
+/* Keyframes copiados do CSS original. */
+
+@keyframes fadeUp {
+	0%   { opacity: 0; transform: translateY(16px); }
+	100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes gentlePulse {
+	0%, 100% { box-shadow: 0 0 #225a3133; }
+	50%      { box-shadow: 0 0 0 8px #225a3100; }
+}
+
+@keyframes float {
+	0%, 100% { transform: translateY(0); }
+	50%      { transform: translateY(-10px); }
+}
+
+.fade-up {
+	animation: .8s var(--ease-out-expo) both fadeUp;
+}
+
+.pulse {
+	animation: gentlePulse 2s ease-in-out infinite;
+}
+
+/* Revelação progressiva — usa o MESMO fadeUp e o mesmo easing.
+   O site de origem só anima no load; numa LP longa a revelação por
+   scroll evita que as seções de baixo cheguem já "gastas". */
+.reveal {
+	opacity: 0;
+}
+
+.reveal.is-visible {
+	animation: .8s var(--ease-out-expo) both fadeUp;
+}
+
+/* Sem JS, nada pode ficar invisível */
+.no-js .reveal { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+	html { scroll-behavior: auto; }
+
+	*, *::before, *::after {
+		animation-duration: .01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: .01ms !important;
+	}
+
+	.reveal { opacity: 1; }
+	.cat:hover { translate: none; }
+	.cat:hover .cat__media img { scale: 1; }
+}
+
+
+/* 13. RESPONSIVO ==================================================== */
+/* Breakpoints iguais aos do design system: 640 / 768 / 1024. */
+
+@media (min-width: 640px) {
+	.grid--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+	.footer__bar > div {
+		flex-direction: row;
+		justify-content: space-between;
+		text-align: left;
+	}
+	.form { padding: 2rem; }
+}
+
+@media (min-width: 768px) {
+	:root { --gutter: 2rem; --header-h: 5rem; }
+
+	.section { padding-block: 6rem; }
+	.section--lg { padding-block: 7rem; }
+	.section--hero { padding-top: calc(var(--header-h) + 4rem); }
+
+	.h1 { font-size: var(--text-6xl); line-height: var(--lh-6xl); }
+	.h2 { font-size: var(--text-5xl); line-height: var(--lh-5xl); }
+	.h3 { font-size: var(--text-3xl); line-height: var(--lh-3xl); }
+
+	.lead { font-size: var(--text-lg); }
+	.body { font-size: var(--text-lg); }
+
+	.header__logo img { height: 3rem; }
+	.btn.header__cta { padding: .625rem 1.25rem; font-size: var(--text-sm); line-height: var(--lh-sm); }
+
+	.panel { padding: 4rem; }
+
+	.footer__inner {
+		grid-template-columns: repeat(4, minmax(0, 1fr));
+		gap: 3rem;
+		padding-block: 4rem;
+	}
+	.footer__brand-col { grid-column: span 2 / span 2; }
+
+	.grid--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+	.stat--float {
+		position: absolute;
+		bottom: -1.5rem;
+		left: -1.5rem;
+		animation: float 4s ease-in-out infinite;
+	}
+}
+
+@media (min-width: 1024px) {
+	.split--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4rem; }
+	.split--form { grid-template-columns: 1fr 26rem; gap: 4rem; align-items: start; }
+	.grid--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
