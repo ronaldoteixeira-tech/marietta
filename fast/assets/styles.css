@@ -616,6 +616,13 @@ h1, h2, h3, h4 {
 .panel .body { color: color-mix(in srgb, var(--primary-foreground) 85%, transparent); }
 .panel .note { color: inherit; opacity: .8; }
 
+/* A lista de benefícios herdava --muted-foreground (verde escuro) e os
+   ícones herdavam --primary — os dois sobre o painel verde, dando
+   1,11:1 e 1,00:1. O componente foi desenhado para fundo claro e não
+   tinha variante aqui. Sobre o verde vai de branco, como o título. */
+.panel .checks li { color: var(--primary-foreground); }
+.panel .checks svg { color: var(--primary-foreground); }
+
 /* Moldura de imagem */
 .frame {
 	border-radius: var(--radius-4xl);
