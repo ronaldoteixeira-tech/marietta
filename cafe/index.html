@@ -371,7 +371,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 					<h2 class="form__title">Receba seu cupom</h2>
 					<p class="body-sm mt-2">Preencha os dados e o cupom é liberado na sequência.</p>
 
-					<form id="form-cupom" action="obrigado.html" method="get" novalidate>
+					<form id="form-cupom-cafe" action="obrigado.html" method="get" novalidate>
 						<input type="hidden" name="utm_source" id="utm_source" value="">
 						<input type="hidden" name="utm_medium" id="utm_medium" value="">
 						<input type="hidden" name="utm_campaign" id="utm_campaign" value="">
@@ -539,8 +539,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 			  validar enquanto a pessoa ainda digita é hostil.
 		   ================================================================ */
 		(function () {
-			var form = document.getElementById('form-cupom');
+			var form = document.getElementById('form-cupom-cafe');
 			if (!form) return;
+
+			/* Identifica esta LP no GTM/GA4 e no n8n. Todas as landings usam o
+			   mesmo container e o mesmo webhook, então sem isto os envios
+			   chegam indistinguíveis. */
+			var FORM_ID = 'form-cupom-cafe';
 
 			var tel = form.querySelector('#whatsapp');
 			var submitted = false;
@@ -599,7 +604,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 				btn.textContent = 'Enviando...';
 
 				window.dataLayer = window.dataLayer || [];
-				window.dataLayer.push({ event: 'form_enviado' });
+				window.dataLayer.push({ event: 'form_enviado', form_id: FORM_ID });
 
 				/* Produção por padrão. `?wh=test` (fica salvo na aba) aponta para o
 				   webhook de teste do n8n, que só responde depois do "Execute
@@ -613,6 +618,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 				var payload = {};
 				new FormData(form).forEach(function (value, key) { payload[key] = value; });
+				payload.form_id = FORM_ID;
 				payload.pagina = 'cafe';
 				payload.ambiente = /^(localhost|127\.|192\.168\.)/.test(location.hostname) ? 'dev' : 'prod';
 				payload.url = location.href;
