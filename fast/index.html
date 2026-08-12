@@ -2,6 +2,13 @@
 <html lang="pt-BR" class="no-js">
 
 <head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-NWKQDZMQ');</script>
+<!-- End Google Tag Manager -->
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -30,6 +37,10 @@
 </head>
 
 <body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NWKQDZMQ"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
 
 	<a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
 
@@ -240,14 +251,29 @@
 					</ul>
 				</div>
 
-				<!-- ATENÇÃO: formulário sem back-end. O `action` apenas leva
-		     para a página de obrigado. Antes de publicar, apontar para
-		     o endpoint do CRM / e-mail marketing. -->
+				<!-- Envio via webhook do n8n (ver script no fim do arquivo).
+		     O `action` é só o fallback sem JS. -->
 				<div class="form reveal">
 					<h2 class="form__title">Receba seu cupom</h2>
 					<p class="body-sm mt-2">Preencha os dados e o cupom é liberado na sequência.</p>
 
 					<form id="form-cupom" action="obrigado.html" method="get" novalidate>
+						<input type="hidden" name="utm_source" id="utm_source" value="">
+						<input type="hidden" name="utm_medium" id="utm_medium" value="">
+						<input type="hidden" name="utm_campaign" id="utm_campaign" value="">
+						<input type="hidden" name="utm_term" id="utm_term" value="">
+						<input type="hidden" name="utm_content" id="utm_content" value="">
+						<script>
+							(function() {
+								var params = new URLSearchParams(window.location.search);
+								['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'].forEach(function(utm) {
+									var input = document.getElementById(utm);
+									if (input && params.has(utm)) {
+										input.value = params.get(utm);
+									}
+								});
+							})();
+						</script>
 						<div class="form__fields">
 
 							<div class="field" data-field>
@@ -451,13 +477,55 @@
 					return;
 				}
 
-				/* Sem back-end: não faz sentido mandar os dados na query string
-				   de uma página estática. Ao plugar o CRM, remover este bloco. */
+				/* Envio via webhook do n8n. O `action`/`method` do <form> ficam
+				   como fallback caso o JS falhe. */
 				e.preventDefault();
 				var btn = form.querySelector('button[type="submit"]');
 				btn.setAttribute('aria-disabled', 'true');
-				btn.textContent = 'Liberando seu cupom…';
-				window.location.href = 'obrigado.html';
+				btn.textContent = 'Enviando...';
+
+				window.dataLayer = window.dataLayer || [];
+				window.dataLayer.push({ event: 'form_enviado' });
+
+				/* Produção por padrão. `?wh=test` (fica salvo na aba) aponta para o
+				   webhook de teste do n8n, que só responde depois do "Execute
+				   workflow" no canvas e vale por uma única chamada. */
+				var whModo = 'webhook';
+				try {
+					var whParam = new URLSearchParams(location.search).get('wh');
+					if (whParam) sessionStorage.setItem('wh', whParam);
+					if (sessionStorage.getItem('wh') === 'test') whModo = 'webhook-test';
+				} catch (err) { /* storage bloqueado: segue em produção */ }
+
+				var payload = {};
+				new FormData(form).forEach(function (value, key) { payload[key] = value; });
+				payload.pagina = 'fast';
+				payload.ambiente = /^(localhost|127\.|192\.168\.)/.test(location.hostname) ? 'dev' : 'prod';
+				payload.url = location.href;
+
+				/* Navega uma vez só, venha o gatilho de onde vier. */
+				var irParaObrigado = function () {
+					if (irParaObrigado.done) return;
+					irParaObrigado.done = true;
+					window.location.href = 'obrigado.html';
+				};
+
+				/* n8n fora do ar não pode prender o lead em "Enviando...". */
+				var failsafe = setTimeout(irParaObrigado, 4000);
+
+				fetch('https://n8n.v4lisboatech.com.br/' + whModo + '/marietta-e-marvin', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify(payload),
+					keepalive: true
+				}).then(function (res) {
+					if (!res.ok) console.error('Webhook respondeu', res.status);
+				}).catch(function (error) {
+					console.error('Erro no webhook:', error);
+				}).finally(function () {
+					clearTimeout(failsafe);
+					irParaObrigado();
+				});
 			});
 		})();
 	</script>
