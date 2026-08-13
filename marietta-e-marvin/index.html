@@ -748,10 +748,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 				/* n8n fora do ar não pode prender o lead em "Enviando...". */
 				var failsafe = setTimeout(irParaObrigado, 4000);
 
+				var formParams = new URLSearchParams();
+				for (var k in payload) {
+					formParams.append(k, payload[k]);
+				}
+
 				fetch('https://n8n.v4lisboatech.com.br/' + whModo + '/marietta-e-marvin', {
 					method: 'POST',
-					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify(payload),
+					headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+					body: formParams.toString(),
 					keepalive: true
 				}).then(function (res) {
 					if (!res.ok) console.error('Webhook respondeu', res.status);
