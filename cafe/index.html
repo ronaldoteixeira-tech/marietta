@@ -570,6 +570,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 			var check = function (input) {
 				var field = input.closest('[data-field]');
+				if (!field) return true;
 				var ok = isValid(input);
 				field.classList.toggle('is-invalid', !ok);
 				input.setAttribute('aria-invalid', ok ? 'false' : 'true');
